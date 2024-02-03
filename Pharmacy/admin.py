@@ -10,5 +10,5 @@ class managerModel(admin.ModelAdmin):
 admin.site.register(manager, managerModel)
 
 class managerModel(admin.ModelAdmin):
-    list_display = ('name', 'category', 'Qty', 'price', 'added_date', 'place')
+    list_display = ('name', 'category', 'Qty', 'price', 'added_date')
 admin.site.register(medicine, managerModel)

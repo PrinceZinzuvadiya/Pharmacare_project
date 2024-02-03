@@ -22,7 +22,3 @@ class medicine(models.Model):
     Qty=models.CharField(max_length=50)
     price=models.BigIntegerField()
     added_date=models.DateField(auto_now_add=True)
-    place=models.CharField(max_length=50)
-
-
-    

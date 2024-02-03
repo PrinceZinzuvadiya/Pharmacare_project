@@ -61,6 +61,7 @@ def userlogout(request):
     logout(request)
     return redirect("/")
 
+# @login_required
 def managerhome(request):
     name = request.session.get('name')
     print(f"Name: {name}")
