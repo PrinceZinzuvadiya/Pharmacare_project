@@ -6,6 +6,8 @@ from .models import *
 from .forms import *
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.core.mail import send_mail
+import random
 
 def home(request):
     return render(request, 'home.html')
@@ -24,19 +26,61 @@ def managerlogin(request):
             print("User Role:", request.session.get("user_role"))
             return redirect('managerhome')
         except ObjectDoesNotExist:
-            messages.error(request, "Login failed: User not found")
+            messages.error(request, "Incorrect username or password")
     return render(request, 'managerlogin.html')
 
+otp = random.randint(111111,999999)
 def managersignup(request):
     if request.method=='POST':
         newuser=managerform(request.POST)
         if newuser.is_valid():
-            newuser.save()
-            print("Signup succesful.")
-            return redirect('managerlogin')
+            newuser.save()  
+            
+            #mail send
+            global otp
+            send_mail(subject="Thank you!!", message=f"Dear user,\n\nThank you for contacting us! \nPlease enter {otp} to proceed further. \n\nThanks & Regards \nPharmacare \n+91 6352613163 | princesoni2701@gmail.com", from_email="princesoni2701@gmail.com", recipient_list=[request.POST['username']])
+
+            return redirect('otp_verify')
         else:
             print(newuser.errors)
     return render(request, 'managersignup.html')
+
+def otp_verify(request):
+    global otp
+    msg = ""
+    if request.method=='POST':
+        if request.POST['otp'] == str(otp):
+            return redirect ('managerlogin')
+        else:
+            msg = 'Invalid Otp. Try Again!!'
+            print(msg)
+    return render (request, 'otp_verify.html', {'msg':msg})
+
+def forgotpassword(request):
+    if request.method=='POST':
+        unm=request.POST['username']
+        try:
+            user=manager.objects.get(username=unm)
+            uid=user.id
+            request.session['uid']=uid
+            return redirect ('newpassword')
+        except:
+            messages.error(request, "Username not found.")
+    return render (request, 'forgotpassword.html')
+
+def newpassword(request):
+    uid=request.session.get('uid')
+    cuid=manager.objects.get(id=uid)
+    if request.method=='POST':
+        newpass=updatepasswordform(request.POST)
+        if newpass.is_valid():
+            newpass=updatepasswordform(request.POST, instance=cuid)
+            newpass.save()
+            messages.success(request, "Password updated succesfully.")
+            return redirect ('managerlogin')
+        else:
+            messages.error(request, "Something went wrong.")
+    return render (request, 'newpassword.html')
 
 def updatemanager(request):
     user = request.session.get('user')
@@ -64,7 +108,6 @@ def userlogout(request):
 # @login_required
 def managerhome(request):
     name = request.session.get('name')
-    print(f"Name: {name}")
     return render(request, 'managerhome.html', {'name': name})
 
 def medicinelist(request):
@@ -198,7 +241,7 @@ def adminlogin(request):
             request.session["user_role"] = "admin"
             return redirect('adminhome')
         except ObjectDoesNotExist:
-            messages.error(request, "Login failed: User not found")
+            messages.error(request, "Incorrect Username or Password")
     return render(request, 'adminlogin.html')
 
 def adminsignup(request):

@@ -21,6 +21,11 @@ class updatemanagerform(forms.ModelForm):
         model=manager
         fields=['firstname', 'lastname', 'username', 'password', 'pharmacy_name']
 
+class updatepasswordform(forms.ModelForm):
+    class Meta:
+        model=manager
+        fields=['password']
+
 class medicineform(forms.ModelForm):
     class Meta:
         model=medicine

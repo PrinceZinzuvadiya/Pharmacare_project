@@ -43,6 +43,18 @@
     </nav>
     <!-- Navbar end -->
      
+     <!-- MSG Start -->
+    {% if messages %}
+    {% for msg in messages %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>{{msg}}</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+    {% endif %}
+    <!-- MSG Start -->
+
+
     <!-- login start -->
     <div class="container">
         <div class="row">
@@ -59,11 +71,9 @@
                       <label for="exampleInputPassword1" class="form-label">Password</label>
                       <input type="password" name="password" class="form-control" id="exampleInputPassword1">
                     </div>
-                    <div class="mb-3 form-check">
-                      <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                      <label class="form-check-label" for="exampleCheck1">Check me out</label>
-                    </div>
-                    <button type="submit" class="btn btn-outline-success" style="font-size: 20px;">Login</button>
+                    <button type="submit" class="btn btn-outline-success my-4 " style="font-size: 20px;">Login</button>
+                    <span class="ms-5"> Or</span>
+                    <a href="/forgotpassword" class="btn btn-outline-success ms-5" style="font-size: 20px;">Forgot Password?</a>
                   </form>
                   <a href="/managersignup" class="btn btn-outline-success my-4 w-100" style="font-size: 25px;">Signup</a>
             </div>
